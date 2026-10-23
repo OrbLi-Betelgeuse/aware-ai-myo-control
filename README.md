@@ -1,3 +1,76 @@
+# Run the Myo Controller on a New Computer
+
+This guide is for running the Jackal simulator with the Myo controller on one computer (for example, a classroom or instructor computer). The controller repository includes the scripts in `2.0/` and a ready-to-serve `jackal-site/` with the floating steering-wheel overlay already enabled.
+
+## One-time setup
+
+1. Clone this repository on the computer that will run the simulator:
+
+   ```bash
+   git clone https://github.com/OrbLi-Betelgeuse/aware-ai-myo-control.git
+   ```
+
+2. Also prepare the Hackathon simulator environment. It must provide:
+   - `jackal-runtime/bin/python` and `jackal-runtime/bin/jackal-bridge`
+   - `Hackathon/examples/myo_lsl_publisher.py`
+
+   These runtime and publisher files are distributed separately; they are not included in this repository. Keep the simulator environment and this cloned repository on the same computer.
+
+3. Connect and wake the Myo armband. Find the Bluetooth address for the specific armband and make sure it is not connected to Myo Connect or another computer. Use that address in Terminal 1 below. The example address from Orb's device is not universal.
+
+The steering wheel is part of the bundled web site, not a separate Python window. When the bridge serves this repository's `jackal-site/`, the page loads `wheel-overlay.js` automatically. No per-controller installation is needed.
+
+## Start the system
+
+Open three Terminal windows. Replace `/path/to/new-chat` and `/path/to/aware-ai-myo-control` with the actual locations on this computer. Keep each process running in its own Terminal.
+
+**Terminal 1 — Myo publisher**
+
+```bash
+cd /path/to/new-chat
+./jackal-runtime/bin/python Hackathon/examples/myo_lsl_publisher.py --addr F2:2A:2D:22:63:17
+```
+
+Replace the example address with this computer's Myo Bluetooth address.
+
+**Terminal 2 — bridge and simulator web site**
+
+```bash
+cd /path/to/aware-ai-myo-control
+/path/to/new-chat/jackal-runtime/bin/jackal-bridge --serve-site --site-dir ./jackal-site
+```
+
+The working directory matters: run this command from the repository root so the bridge serves the bundled site and its steering-wheel overlay.
+
+**Terminal 3 — controller and calibration**
+
+For controller 3.1:
+
+```bash
+cd /path/to/aware-ai-myo-control
+/path/to/new-chat/jackal-runtime/bin/python 2.0/my_team3_1.py
+```
+
+For controller 2.7, use `2.0/my_team2_7.py` instead. Follow the calibration prompts in Terminal 3.
+
+Open the simulator in a browser on the same computer:
+
+```text
+http://localhost:8765/Hackathon/
+```
+
+The floating steering wheel appears on the vehicle in supported views. It is hidden in FPV view. To check the overlay asset, open `http://localhost:8765/Hackathon/wheel-overlay.js`; the browser should show the JavaScript file rather than a 404 page. If the page was already open before the bridge started, reload it.
+
+## What to keep running
+
+- Terminal 1 streams the Myo sensor data over LSL.
+- Terminal 2 serves the simulator and exchanges state and commands.
+- Terminal 3 reads the Myo stream, calibrates, and sends the selected controller's commands.
+
+All three processes and the browser page must be on the same computer when using `localhost`.
+
+---
+
 # Shima EMG gesture baseline — pilot v1
 
 This package trains and evaluates a gesture classifier. It does not drive the robot.
