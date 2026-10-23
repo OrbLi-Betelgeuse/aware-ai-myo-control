@@ -10,3 +10,6 @@ jackal-runtime/
 # Local LiDAR safety support files
 /2.0/my_team2_6_lidar_safety_enhanced_summary.md
 /2.0/my_team2_6_lidar_safety_enhanced_test_results.txt
+
+# Local test suites
+tests/
