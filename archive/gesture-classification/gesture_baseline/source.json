@@ -1,0 +1,8 @@
+{
+  "filename": "Myodata.zip",
+  "participant_id": "Shima",
+  "participant_source": "Confirmed by user",
+  "sha256": "915dee2450c9fd2fa5698850bdb5e141ceaea4e924aeff9613f8aa33d2fa239a",
+  "labels_from": "parent folder names",
+  "independent_trial_assumption": "one CSV = one action trial"
+}

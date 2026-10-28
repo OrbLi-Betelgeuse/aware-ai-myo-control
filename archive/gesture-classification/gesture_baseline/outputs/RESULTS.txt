@@ -1,0 +1,28 @@
+Recordings: 42; windows: 3164
+Recordings by class: {'back': 5, 'forward': 21, 'left': 8, 'right': 8}
+5-fold stratified validation, split by whole recording files.
+OOF accuracy: 0.983
+OOF balanced accuracy: 0.977
+OOF macro F1: 0.979
+
+              precision    recall  f1-score   support
+
+        back       0.98      0.94      0.96       399
+     forward       0.99      0.99      0.99      1504
+        left       0.97      0.99      0.98       625
+       right       1.00      0.99      0.99       636
+
+    accuracy                           0.98      3164
+   macro avg       0.98      0.98      0.98      3164
+weighted avg       0.98      0.98      0.98      3164
+
+LIMITATIONS:
+No rest/neutral examples: predictions cannot validate stopping or idle false activations.
+All current recordings are from Shima (user-confirmed): within-person evaluation only.
+One CSV is assumed to be one independent trial with its folder label throughout.
+Classes were collected in time blocks; session/time/placement effects may confound results.
+Timestamps are nonmonotonic; preserve row order and use nominal-rate sample-count windows.
+Variable acquisition rates mean 40 samples may span more than 200 ms.
+Overlapping windows are correlated: window counts are not independent trial counts.
+Final model uses all data; evaluate future new trials separately before retraining.
+Probability is not calibrated and is not a validated unknown-gesture detector.

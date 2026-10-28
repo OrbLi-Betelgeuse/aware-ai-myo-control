@@ -1,0 +1,16 @@
+{
+  "labels": [
+    "back",
+    "forward",
+    "left",
+    "right"
+  ],
+  "sample_rate_hz": 200,
+  "window_ms": 200,
+  "hop_ms": 50,
+  "trim_ms": 250,
+  "max_gap_ms": 100,
+  "folds": 5,
+  "seed": 42,
+  "participant_id": "Shima"
+}

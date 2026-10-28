@@ -1,0 +1,20 @@
+{
+  "gesture_baseline/README.md": "3cb03db22224d7962816c9cc4d4995b3f7fdcb42a40f538d8894e18be12c93c5",
+  "gesture_baseline/config.json": "3cfca5fffae631d220430d599a927c6743ab1e091bc597a2d3fc24ade3bba77c",
+  "gesture_baseline/gesture_model.py": "db143f9aebb95a2d6542a3c53c601435102446f3d8410f44cffc0d38e7f6ca4d",
+  "gesture_baseline/outputs/RESULTS.txt": "d186b14a6ff7a4e41f2d9ad755f07ac745403381744b91dda4c3bf20c542a9c0",
+  "gesture_baseline/outputs/confusion_matrix.csv": "34decdb7acd0e83aad46e0dba1ed2913e16ece09572dde51bf27683a6a25a7c9",
+  "gesture_baseline/outputs/data_audit.json": "9635c4e8fe2e04cdeb60a83de01a04b80f19d1b767dde7a763f0a3b95046e6b6",
+  "gesture_baseline/outputs/fold_assignments.csv": "0401da98329388a999aabfb511ca5efecb3934b0d84669c211c0ca4feec08a6b",
+  "gesture_baseline/outputs/metrics.json": "4967ac6dc68286f2c8e24d5c56c1d09f4adf2da5a8546d65df384560efaab398",
+  "gesture_baseline/outputs/model.joblib": "447d987c24d526db596f16792fefb112f5f6846b39d5585cad6630ee30f97c02",
+  "gesture_baseline/outputs/oof_predictions.csv": "ce81991ce2a92ebf3dba2ab12e1eba0b90d66e0d3578fe8700fa176750b3c9ee",
+  "gesture_baseline/outputs/recording_audit.csv": "828f5806e3f4af67dc28f5f3b20cf4fb8145901ed1b34091000d337d52cdad09",
+  "gesture_baseline/outputs/verification.json": "0ca2739170af917225f98cd5e1060ccaa2e0cc671317633d27991bd6bb6795d9",
+  "gesture_baseline/predict.py": "95f3ed19a975ce481fa79a52bf9b33c72752d6b80d556c0fb141c19a43305fcc",
+  "gesture_baseline/requirements-lock.txt": "5ec7425685775f96c265db2cca335058344a0bd51516f52addb4d678691443c2",
+  "gesture_baseline/requirements.txt": "6a7438bcbc00654a14e4d983979721afc2f6008f484b8bb13c3a7aa626efc1af",
+  "gesture_baseline/source.json": "29d3c7302898742f016d63ded53454e3da0a46850964e0baee6b13645c3c2300",
+  "gesture_baseline/test_baseline.py": "51803e9dfb4fee4558deac1eabb473f4fe015c6e42bd58641ac5b7cbdca1f2e9",
+  "gesture_baseline/train.py": "a698b2582099a5040f22ca7ff3004cc6d225e85c657bab4985ca16ea52ed2798"
+}

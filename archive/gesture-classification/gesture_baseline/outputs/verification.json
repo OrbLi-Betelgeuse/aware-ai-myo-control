@@ -1,0 +1,7 @@
+{
+  "model_serialization": "passed",
+  "offline_csv_replay": "passed; 80 predictions",
+  "regression_checks": "4 passed",
+  "live_lsl": "passed with synthetic stream; real armband not tested",
+  "robot_integration": "not implemented by model package"
+}
