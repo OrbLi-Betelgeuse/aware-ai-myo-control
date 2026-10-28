@@ -9,6 +9,7 @@
   Object.assign(panel.style,{position:'fixed',bottom:'16px',left:'16px',zIndex:40,
     padding:'16px 20px',borderRadius:'14px',background:'#101d2ef2',color:'#f5f8ff',font:'14px/1.6 system-ui'});
   panel.innerHTML='<strong>Keyboard Demo · Interface Preview</strong><br>Built-in keyboard controls · No Myo controller<br>W/S: forward/reverse · A/D: turn · Shift: fine control<br>Release keys to stop · C: camera<br><button data-start>Start / Resume</button> <button data-stop>Stop Driving</button><br><span role="status"></span>';
+  panel.id = 'keyboard-demo-panel';
   document.body.appendChild(panel);
   const status=panel.querySelector('span');
   let sim,arbiter,started=null,lastPhase='stopped';

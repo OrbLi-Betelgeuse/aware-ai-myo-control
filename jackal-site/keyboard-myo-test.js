@@ -8,6 +8,7 @@
     background:'#101d2ef2',color:'#f5f8ff',padding:'16px 20px',borderRadius:'14px',
     border:'1px solid #64859e',font:'14px/1.6 system-ui',maxWidth:'430px'});
   panel.innerHTML = '<strong>Keyboard Demo · No Myo Required</strong><br>Enter: start / resume · Space: stop driving<br>W: fist / faster · A / D: turn · S: reverse<br><small>Release keys: slow forward · Space: stop</small><br><button type="button" data-start>Start / Resume</button> <button type="button" data-pause>Stop Driving</button><br><span role="status" aria-live="polite"></span>';
+  panel.id = 'keyboard-demo-panel';
   document.body.appendChild(panel);
   const status = panel.querySelector('span');
   const keys = new Set(), allowed = new Set(['KeyW','KeyA','KeyS','KeyD']);
