@@ -1,0 +1,14 @@
+const assert=require('node:assert/strict'),vm=require('node:vm'),fs=require('node:fs');
+let install,now=100,estop=false;
+const run={phase:'running',elapsed:5,startT:0,update(s){if(this.phase==='running')this.elapsed=s.t-this.startT;}};
+const demo={enabled:true,phase:'running',lastState:100};
+const context={URLSearchParams,location:{search:'?controller=3.2a&keyboard=1'},window:{awareDemo:demo,__sim:{run,gate:{isEstopped:()=>estop}}},performance:{now:()=>now},setInterval:f=>{install=f;return 1;},clearInterval(){}};
+vm.runInNewContext(fs.readFileSync(require('node:path').join(__dirname,'../jackal-site/demo-clock.js'),'utf8'),context);install();
+run.update({t:6});assert.equal(run.elapsed,6);
+demo.enabled=false;run.update({t:16});assert.equal(run.elapsed,6);
+demo.enabled=true;demo.phase='countdown';run.update({t:19});assert.equal(run.elapsed,6);
+demo.phase='running';run.update({t:20});assert.equal(run.elapsed,7);
+estop=true;run.update({t:30});assert.equal(run.elapsed,7);
+estop=false;now=1000;run.update({t:40});assert.equal(run.elapsed,7);
+run.phase='ready';run.elapsed=0;run.startT=0;run.update({t:0});assert.equal(run.elapsed,0);
+console.log('Demo clock: driving, stopped input, preparation, resume, E-stop, stale status and reset passed.');

@@ -18,10 +18,10 @@ band rotation), the arm directions come from the IMU, and the fist / open-hand p
 in the ~30 s calibration at the start (about 36 s with USE_BACK), so they match how the band sits right now.
 
 Run, from the repo folder (jackal-bridge running, the sim open, myo_lsl_publisher.py streaming):
-    python examples/my_team.py
+    python controllers/competition/my_team3_2.py
 Saves, in a new folder per run:
-    results/my_team/<date_time>/calibration.json   the driver's calibration numbers
-    results/my_team/<date_time>/drive_log.csv      one row per 50 ms: signals, command, lidar, course
+    data/driving-sessions/<date_time>/calibration.json   the driver's calibration numbers
+    data/driving-sessions/<date_time>/drive_log.csv      one row per 50 ms: signals, command, lidar, course
 """
 from __future__ import annotations
 
@@ -530,7 +530,7 @@ def main() -> None:
     IMU.pull_chunk(timeout=0.0)
     reset_control()
 
-    out = Path(__file__).resolve().parents[1] / "results" / "my_team" / datetime.now().strftime("%Y%m%d_%H%M%S")
+    out = Path(__file__).resolve().parents[2] / "data" / "driving-sessions" / datetime.now().strftime("%Y%m%d_%H%M%S")
     out.mkdir(parents=True)
     (out / "calibration.json").write_text(json.dumps(CAL, indent=2) + "\n")
     if CAL["problems"]:

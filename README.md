@@ -1,195 +1,127 @@
-# Run the Myo Controller on a New Computer
+# Myo Armband → Jackal Control
 
-This guide is for running the Jackal simulator with the Myo controller on one computer (for example, a classroom or instructor computer). The controller repository includes the scripts in `2.0/` and a ready-to-serve `jackal-site/` with the floating steering-wheel overlay already enabled.
+Control a Jackal in the hackathon browser simulator using Myo muscle activity and arm orientation. This RIT AWARE-AI Hackathon project combines EMG-based speed control, IMU-based steering and reverse, forward LiDAR speed limiting, and an on-robot steering-wheel display.
 
-## One-time setup
+**3.2 is the final competition version.** It uses calibrated signal processing and rules, not a trained machine learning model. The separate gesture-classification experiment is preserved in the archive and is not required to run the controller.
 
-1. Clone this repository on the computer that will run the simulator:
+[Presentation PDF](Project-Presentation.pdf) · [Competition 3.2 source](controllers/competition/my_team3_2.py) · [Try Keyboard Demo](#no-myo-try-keyboard-demo)
 
-   ```bash
-   git clone https://github.com/OrbLi-Betelgeuse/aware-ai-myo-control.git
-   ```
+## Choose a version
 
-2. Also prepare the Hackathon simulator environment. It must provide:
-   - `jackal-runtime/bin/python` and `jackal-runtime/bin/jackal-bridge`
-   - `Hackathon/examples/myo_lsl_publisher.py`
+| What you want to do | Version | Input |
+| --- | --- | --- |
+| Run the final competition controller | **3.2**, instructions below | Myo armband and publisher |
+| Explore the interface without Myo | **Keyboard Demo** | Built-in simulator keyboard controls with the updated 3.2a interface |
+| Test the experimental control logic | **3.2a / 3.2aTest** | Real Myo or synthetic sensor input; see the experimental guides |
 
-   These runtime and publisher files are distributed separately; they are not included in this repository. Keep the simulator environment and this cloned repository on the same computer.
+The experimental versions add stricter checks and a preparation countdown. They are not the versions used in the competition. Their browser interface uses practice timing that pauses during stops and preparation. Do not compare those times directly with competition runs.
 
-3. Connect and wake the Myo armband. Find the Bluetooth address for the specific armband and make sure it is not connected to Myo Connect or another computer. Use that address in Terminal 1 below. The example address from Orb's device is not universal.
+## Run competition version 3.2
 
-The steering wheel is part of the bundled web site, not a separate Python window. When the bridge serves this repository's `jackal-site/`, the page loads `wheel-overlay.js` automatically. No per-controller installation is needed.
+The runnable controller is [`controllers/competition/my_team3_2.py`](controllers/competition/my_team3_2.py). It is the final competition script, not a shortcut to the experimental version.
 
-## Start the system
+### What you need
 
-Open three Terminal windows. Replace `/path/to/new-chat` and `/path/to/aware-ai-myo-control` with the actual locations on this computer. Keep each process running in its own Terminal.
+- A Myo armband, its Bluetooth address, and a working connection to your computer.
+- This repository, including `jackal-site/`.
+- The separately installed hackathon runtime and `Hackathon/examples/myo_lsl_publisher.py` from the [instructor's project](https://github.com/AHRTLab/Hackathon). The runtime must provide `jackal-bridge`, `numpy`, `pylsl` with native liblsl, and `websockets`.
 
-**Terminal 1 — Myo publisher**
+The publisher and bridge are external dependencies, not bundled installers in this repository. Opening the webpage alone does not start the Myo controller.
 
-```bash
-cd /path/to/new-chat
-./jackal-runtime/bin/python Hackathon/examples/myo_lsl_publisher.py --addr F2:2A:2D:22:63:17
+### Start three terminals
+
+Replace `/path/to/hackathon-environment`, `/path/to/aware-ai-myo-control`, and `YOUR_MYO_BLUETOOTH_ADDRESS` with your actual values. Run one controller and one simulator page at a time; stop any experimental controller first.
+
+**Terminal 1: publish Myo sensor data**
+
+```sh
+cd /path/to/hackathon-environment
+./jackal-runtime/bin/python Hackathon/examples/myo_lsl_publisher.py --addr YOUR_MYO_BLUETOOTH_ADDRESS
 ```
 
-Replace the example address with this computer's Myo Bluetooth address.
+**Terminal 2: serve the simulator and start the bridge**
 
-**Terminal 2 — bridge and simulator web site**
-
-```bash
+```sh
 cd /path/to/aware-ai-myo-control
-/path/to/new-chat/jackal-runtime/bin/jackal-bridge --serve-site --site-dir ./jackal-site
+/path/to/hackathon-environment/jackal-runtime/bin/jackal-bridge --serve-site --site-dir ./jackal-site
 ```
 
-The working directory matters: run this command from the repository root so the bridge serves the bundled site and its steering-wheel overlay.
+Open <http://localhost:8765/Hackathon/>. Use this plain URL for 3.2, without `controller=3.2a` or `keyboard=1`.
 
-**Terminal 3 — controller and calibration**
+**Terminal 3: run competition controller 3.2**
 
-For controller 3.1:
-
-```bash
+```sh
 cd /path/to/aware-ai-myo-control
-/path/to/new-chat/jackal-runtime/bin/python 2.0/my_team3_1.py
+/path/to/hackathon-environment/jackal-runtime/bin/python controllers/competition/my_team3_2.py
 ```
 
-For controller 2.7, use `2.0/my_team2_7.py` instead. Follow the calibration prompts in Terminal 3.
+Follow the terminal calibration prompts: **relax, left, right, hand-up, fist**. Then hold a relaxed, level, untwisted pose to arm. Competition 3.2 does not have the experimental Ready / 3 / 2 / 1 / GO overlay.
 
-Open the simulator in a browser on the same computer:
+### Drive and stop
 
-```text
-http://localhost:8765/Hackathon/
+| Myo input or action | Result |
+| --- | --- |
+| Relaxed, neutral arm after arming | Slow forward motion, approximately 0.4 m/s target |
+| Fist | Increase forward speed, subject to LiDAR limiting |
+| Twist left / right | Steer |
+| Hand up | Request straight reverse |
+| Simulator E-stop | Stop vehicle control; the competition course timer continues |
+
+**Relaxing is not a stop.** Use simulator E-stop before ending a session, then Ctrl+C in the controller terminal. Stop the publisher and bridge when finished. Calibration and driving logs stay together in `data/driving-sessions/<timestamp>/`.
+
+For dependency details, calibration troubleshooting and connection issues, see the [setup and troubleshooting guide](docs/RUNNING.md).
+
+## No Myo? Try Keyboard Demo
+
+### Explore the interface with built-in keyboard controls
+
+This is the recommended no-Myo experience. Drive using the instructor simulator's built-in keyboard mapping while viewing our steering-wheel overlay and updated 3.2a interface: Ready, 3/2/1, green GO, explicit stop states and practice timer pauses. **This mode does not run our Python controller, EMG/IMU processing or LiDAR speed-limiting rules.** It demonstrates the interface, not Myo control performance.
+
+With the external hackathon runtime installed, run this from the repository root:
+
+```sh
+sh controllers/experimental/start.sh bridge
 ```
 
-The floating steering wheel appears on the vehicle in supported views. It is hidden in FPV view. To check the overlay asset, open `http://localhost:8765/Hackathon/wheel-overlay.js`; the browser should show the JavaScript file rather than a 404 page. If the page was already open before the bridge started, reload it.
+The launcher defaults to the maintainer's local runtime. On another computer, first set `AWARE_RUNTIME` to your installed `jackal-runtime` directory. No Myo publisher or Python controller is needed for this mode.
 
-## What to keep running
+Open <http://localhost:8765/Hackathon/?controller=3.2a&input=native>. Select **Start / Resume**, then use **W/S** to drive forward/reverse, **A/D** to turn, **Shift** for fine control and **C** to change camera. Releasing movement keys stops driving. **Space / Stop Driving** explicitly stops driving and pauses the practice timer; resume includes the preparation countdown. E-stop must be cleared explicitly.
 
-- Terminal 1 streams the Myo sensor data over LSL.
-- Terminal 2 serves the simulator and exchanges state and commands.
-- Terminal 3 reads the Myo stream, calibrates, and sends the selected controller's commands.
+Use one simulator page and stop other controllers. The interface preview disconnects its command bridge to prevent remote commands overriding local controls; a disconnected bridge indicator is expected in this mode. The website is still served by the same process.
 
-All three processes and the browser page must be on the same computer when using `localhost`.
+The steering wheel loads automatically from this repository's `jackal-site/`. Use Chase or Top view; FPV intentionally hides it. Serving a different copy of the instructor's website will not include our overlay.
 
----
+### For controller testing: Keyboard-to-Myo Test
 
-# Shima EMG gesture baseline — pilot v1
+Teammates can use the separate [3.2aTest guide](controllers/experimental/keyboard-demo/README.md). It generates synthetic EMG/IMU samples from keys and runs the actual 3.2a controller, including its forward LiDAR speed limits. Its keyboard feel differs from native controls: releasing keys requests relaxed, slow forward motion rather than stopping.
 
-This package trains and evaluates a gesture classifier. It does not drive the robot.
-All 42 current recordings belong to Shima, as confirmed by Orb.
+This test tool is retained for development. It is not the recommended interface-only demo. Real-Myo and neutral-preview instructions are in the [experimental documentation](controllers/experimental/README.md).
 
-## Algorithm
+## What the project implements
 
-- Read the eight columns EMG_1 through EMG_8 in that order, at nominal 200 Hz.
-- Use 40-sample windows (nominal 200 ms), moving by 10 samples (50 ms).
-- Extract raw RMS separately for each channel: 8 features. No timestamp, filename, or recording ID is a feature.
-- StandardScaler -> LinearDiscriminantAnalysis(solver="lsqr", shrinkage="auto").
-- Use equal class priors; recording counts are unbalanced.
-- Fit preprocessing on each training fold only.
-- Validate with five folds stratified at the recording-file level. All overlapping windows from one file stay together.
-- Retrain on all recordings to produce outputs/model.joblib. This final model is for later NEW trials, not a new evaluation on its training data.
+- Eight-channel EMG effort processing and per-wearer calibration.
+- IMU orientation processing, dead zones, smoothing and velocity slew limits.
+- A nominal 20 Hz control loop using LSL input and WebSocket commands.
+- Piecewise forward speed limits based on LiDAR clearance.
+- Paired calibration and driving logs for each session.
+- A JavaScript steering-wheel overlay on the simulated robot, with chase and top views confirmed by the project owner.
 
-The ZIP may be read directly; no manual extraction is needed. Folder names provide labels because every CSV's internal label is currently "data".
+Forward LiDAR limiting is not autonomous navigation or full collision avoidance. Competition 3.2 treats a missing scan as clear and does not protect reverse travel with rear LiDAR. The experimental variants add checks but still require real Myo validation. See the [implementation and limitations](docs/IMPLEMENTATION_AUDIT.md) and [validation record](docs/VALIDATION.md).
 
-## Installation
+## Find your way around
 
-Use the existing jackal-runtime environment on Orb's computer, or on another machine:
+| Location | Contents |
+| --- | --- |
+| `controllers/competition/` | Final competition 3.2 |
+| `controllers/experimental/` | 3.2a and Keyboard Demo, each with its own instructions |
+| `controllers/archive/` | Historical controllers and original teammate safety enhancement |
+| `jackal-site/` | Simulator website and the active steering-wheel overlay |
+| `data/` | Gesture recordings and complete driving sessions; see the [data guide](data/README.md) |
+| `tests/` | Automated behavior and interface checks |
+| `docs/` | [Architecture](docs/ARCHITECTURE.md), [version history](docs/VERSIONS.md), setup and validation |
+| `archive/` | Unused classification experiment and original documents/component copies; see [archive notes](archive/README.md) |
+| `Project-Presentation.pdf` | Hackathon presentation |
 
-```bash
-python -m pip install -r requirements.txt
-```
+## Attribution
 
-Use Python 3.11 and the versions in requirements-lock.txt for the closest reproduction.
-Native liblsl may be required on some machines for live LSL; the supplied hackathon Conda environment includes it.
-
-## Train again
-
-Run from this folder (gesture_baseline):
-
-```bash
-python train.py --data ../Myodata.zip
-```
-
-On Orb's current machine the installed interpreter is:
-
-```text
-/Users/betelgeuseorb/Documents/Codex/2026-10-22/new-chat/jackal-runtime/bin/python
-```
-
-Replace `python` in the commands with this absolute path if that environment is not activated.
-Add or replace data, keep the format consistent, then rerun training. Replacing the ZIP alone does not update the model.
-A source directory can also be passed instead of a ZIP.
-
-Required folder layout, optionally nested under a common root:
-
-```text
-back/*.csv
-forward/*.csv
-left/*.csv
-right/*.csv
-```
-
-Optional future neutral recordings: add a rest folder AND add "rest" to config.json labels, then retrain.
-For new gestures, update the labels and downstream controller mapping too.
-For a new participant, update participant_id when training a participant-specific dataset. This version does not implement multi-person LOSO or transfer learning.
-
-The loader assumes each CSV contains one intended gesture throughout. It trims 250 ms from each edge (by nominal sample count), which does NOT establish that remaining samples are correctly labeled. Relabel/split files if they contain substantial rest or gesture transitions.
-It rejects missing channels, nonfinite data, duplicate file bytes, inconsistent declared sample rates, missing classes, and recordings with no usable windows.
-
-## Outputs
-
-- outputs/model.joblib: fitted classifier, scaler, labels, channels, and feature settings.
-- outputs/RESULTS.txt: readable results and limitations.
-- outputs/metrics.json: scores, per-fold metrics, class metrics, matrix, and settings.
-- outputs/confusion_matrix.csv: rows = actual; columns = predicted.
-- outputs/fold_assignments.csv: reproducible file-level split assignments.
-- outputs/oof_predictions.csv: held-out window predictions.
-- outputs/recording_audit.csv and data_audit.json: counts, sampling/timestamp checks, hashes, participant ID.
-
-Only load joblib artifacts you trust. This package's model is generated locally by train.py.
-
-## Offline replay (no armband)
-
-```bash
-python predict.py --replay path/to/one_recording.csv
-```
-
-Outputs one JSON prediction per window. Replaying training recordings checks plumbing, not generalization.
-
-## Live predictions (on the computer receiving the Myo stream)
-
-Close the keyboard teleop controller before integrating any new robot controller.
-Start the official Myo publisher first, then:
-
-```bash
-python predict.py
-```
-
-The predictor refuses to choose arbitrarily if multiple Myo_EMG streams exist. Use --source-id to select the intended publisher, or --stream-name for a deliberately different stream name.
-It checks channel labels/order and nominal rate; reports invalid input if there are insufficient or stale samples. Time correction is requested from LSL at connection time.
-This interface has been tested with a synthetic local LSL stream, not yet with Shima's live device.
-
-Optional output stream:
-
-```bash
-python predict.py --lsl-output
-```
-
-GesturePrediction publishes `[class_index, confidence, valid]` at 20 Hz.
-The class-label array is stored in the stream metadata under class_labels_json. Use it rather than assuming a numeric label mapping.
-Invalid output is `[-1, 0, 0]`. On disconnect, a consumer MUST also independently detect a stale prediction stream and output zero commands; a final invalid sample is not guaranteed after a crash.
-`confidence` is the model's uncalibrated probability, not a proven correctness or unknown-gesture estimate.
-
-**Do not connect GesturePrediction directly to controller_template.py's default two-number (v,w) mapping.** Its values are gesture index/confidence/valid, not velocity. A separate gesture-to-motion controller is still required, including brake/reverse states, safe stopping, and command smoothing. No robot command is sent by predict.py.
-
-## Current limitations and next experiment
-
-- No rest/neutral class: the four-way classifier can label rest or unfamiliar motions as a movement, possibly with high confidence. Do not infer safe stopping from the four-class accuracy.
-- Only Shima: no cross-user validation or adaptation is implemented/evaluated.
-- Assumption: one CSV is one independent action trial. Recordings in a single session are still related.
-- Collection occurred in class-specific time blocks. Time, armband shift, fatigue, or session effects may inflate file-held-out performance. Collect interleaved new trials to test this.
-- Many timestamps move backward. Do not sort rows to manufacture chronology. The pipeline preserves order and uses RMS (order-invariant within each window).
-- Some recordings have fewer samples per second than nominal. A 40-sample window can span longer than 200 ms. Large forward-gap windows are excluded, but timing quality is not repaired.
-- Edge trimming is an unvalidated initial setting.
-- Small trial counts and correlated overlapping windows mean thousands of windows do not equal thousands of independent observations.
-- Smoothing, temporal confirmation, movement mapping, and physical stopping response are not implemented by this classifier package.
-
-Next: test NEW interleaved Shima trials, including neutral and transitions; inspect live predictions before connecting a controller. Then test the complete system in L0. Add other users only after the initial mapping is usable.
+The instructor's project supplies the simulator, bridge, Myo publisher and controller examples. This repository preserves the team's controller iterations, recordings, driving logs and steering-overlay customization. The simulator is bundled build output, not a claim of team authorship of the entire simulator. See [provenance](docs/PROVENANCE.md) for component attribution. No new license is assigned to inherited materials.

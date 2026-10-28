@@ -11,5 +11,10 @@ jackal-runtime/
 /2.0/my_team2_6_lidar_safety_enhanced_summary.md
 /2.0/my_team2_6_lidar_safety_enhanced_test_results.txt
 
-# Local test suites
-tests/
+# Local synthetic demos; retain files but do not mix them with historical evidence.
+/data/driving-sessions/*_synthetic_3_2a/
+
+/data/driving-sessions/*_synthetic_3_2aTest/
+
+# Local editor/session history
+.Rhistory
